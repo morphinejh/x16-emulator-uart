@@ -469,9 +469,12 @@ int serialib::writeBytes(const void *Buffer, const unsigned int NbBytes, unsigne
 {
 #if defined (_WIN32) || defined( _WIN64)
     // Write data
-    if(!WriteFile(hSerial, Buffer, NbBytes, NbBytesWritten, NULL))
+	DWORD NumBytes;
+    //if(!WriteFile(hSerial, Buffer, NbBytes, NbBytesWritten, NULL))
+	if(!WriteFile(hSerial, Buffer, NbBytes, &NumBytes, NULL)){
         // Error while writing, return -1
         return -1;
+	}
     // Write operation successfull
     return 1;
 #endif
