@@ -17,7 +17,7 @@ else ifeq ($(OS),Windows_NT)
 endif
 
 CFLAGS=-std=c11 -O3 -Wall -Werror -g $(shell $(SDL2CONFIG) --cflags) -Isrc/extern/include
-CXXFLAGS=-std=c++17 -O3 -Wall -Werror -Isrc/extern/ymfm/src
+CXXFLAGS=-std=c++17 -O3 -Wall -Werror -Isrc/extern/ymfm/src -Isrc/extern/serialuart -Isrc/extern/serialuart/serialib
 LDFLAGS=$(shell $(SDL2CONFIG) --libs) -lm -lz
 
 ifdef ADDL_INCLUDE
@@ -86,7 +86,7 @@ ifeq ($(FLUIDSYNTH),1)
 endif
 
 _X16_OBJS = cpu/fake6502.o memory.o disasm.o video.o i2c.o smc.o rtc.o via.o serial.o ieee.o vera_spi.o audio.o vera_pcm.o vera_psg.o sdcard.o main.o debugger.o javascript_interface.o joystick.o rendertext.o keyboard.o icon.o timing.o wav_recorder.o testbench.o files.o cartridge.o iso_8859_15.o ymglue.o midi.o
-_X16_OBJS += extern/ymfm/src/ymfm_opm.o
+_X16_OBJS += extern/ymfm/src/ymfm_opm.o extern/serialuart/serialuartTL16C2550.o extern/serialuart/serialib/serialib.o extern/serialuart/serialuart_wrapper.o
 
 ifdef TARGET_WIN32
 	_X16_OBJS += video_win32.o
