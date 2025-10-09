@@ -321,9 +321,9 @@ void serialuartTL16C2550::reconfigureSerial(){
 	}
     
     //Connect to real serial port
-	//char errorOpening = serialPort.openDevice(path.c_str(), baudCalculator(requestedDivisor));
+	//int errorOpening = serialPort.openDevice(path.c_str(), baudCalculator(requestedDivisor));
 
-	char errorOpening = this->serialPort.openDevice(path.c_str(), baudCalculator(requestedDivisor),
+	int errorOpening = this->serialPort.openDevice(path.c_str(), baudCalculator(requestedDivisor),
 		Databits,
 		Parity,
 		Stopbits);
@@ -431,7 +431,7 @@ int serialuartTL16C2550::init(char* port) {
 
     path += (char*)port;
 	std::cout<<"Attempting: "<<path<<", ";
-    char errorOpening = this->serialPort.openDevice(path.c_str(), 115200);
+    int errorOpening = this->serialPort.openDevice(path.c_str(), 115200);
 
     // If connection fails, return the error code and display a success message
     if (errorOpening!=1){
