@@ -26,6 +26,16 @@ serialuartTL16C2550Handle uartCreate() {
     return static_cast<serialuartTL16C2550Handle>(new serialuartTL16C2550());
 }
 
+bool uart_irqPending( serialuartTL16C2550Handle uart){
+	serialuartTL16C2550* obj = static_cast<serialuartTL16C2550*>(uart);
+	
+    if (obj != NULL) { 
+        return obj->irqPending();
+    }
+    
+	return false;
+}
+
 int uart_init( serialuartTL16C2550Handle uart, char *value ) {
 
     serialuartTL16C2550* obj = static_cast<serialuartTL16C2550*>(uart);

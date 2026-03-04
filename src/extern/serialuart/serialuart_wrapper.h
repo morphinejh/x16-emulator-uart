@@ -32,6 +32,7 @@ serialuartTL16C2550Handle uartCreate();
 int uart_init( serialuartTL16C2550Handle, char*);
 int uart_addrwrite( serialuartTL16C2550Handle , unsigned char*, int);
 int uart_addrread( serialuartTL16C2550Handle , unsigned char*, int);
+bool uart_irqPending( serialuartTL16C2550Handle uart);
 
 
 // Destructor-like function

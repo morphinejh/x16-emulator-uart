@@ -1215,7 +1215,7 @@ main(int argc, char **argv)
 			
 			if (argc && argv[0][0] != '-') {
 				uart1_addr = 0x9f00 | ((uint16_t)strtol(argv[0], NULL, 16) & 0xff);
-				uart1_addr &= 0xfff0;
+				//uart1_addr &= 0xfff0;
 				argc--;
 				argv++;
 			} else {
@@ -1865,7 +1865,7 @@ emulator_loop(void *param)
 			audio_render();
 		}
 
-		if (video_get_irq_out() || via1_irq() || (has_via2 && via2_irq()) || (ym2151_irq_support && YM_irq()) || (has_midi_card && midi_serial_irq())) {
+		if (video_get_irq_out() || via1_irq() || (has_via2 && via2_irq()) || (ym2151_irq_support && YM_irq()) || (has_midi_card && midi_serial_irq()) || (has_uart1 && uart_irqPending(uart1)) || (has_uart2 && uart_irqPending(uart2)) ) {
 //			printf("IRQ!\n");
 			irq6502();
 		}
