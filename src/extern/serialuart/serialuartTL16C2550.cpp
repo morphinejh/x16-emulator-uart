@@ -749,7 +749,7 @@ int serialuartTL16C2550::addrread(unsigned char *value, int address){
         // Offset 4 – Modem Control Register
         // -------------------------------------------------------------------
         case 4:
-            *value = MCR & 0x1F;    // bits 7:5 are not implemented
+            *value = MCR & 0x3F;    // bits 7:5 are not implemented
             retVal = 1;
             break;
 
