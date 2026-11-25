@@ -141,6 +141,7 @@ uint16_t midi_card_addr;
 
 //Serial UART Setup
 bool has_uart1 = false;
+bool uart_bankread_ff = false;
 uint16_t uart1_addr = 0x9fe0;
 serialuartTL16C2550Handle uart1 = NULL;
 
@@ -628,6 +629,11 @@ usage()
 	printf("-uart2 <target>\n");
 	printf("\tConnect the second UART ($9FE8) to <target> (same choices as -uart1).\n");
 	printf("\tThis option is experimental.\n");
+	printf("-uart-bankread-ff\n");
+	printf("\tReproduce a real-hardware quirk: a UART data register (RBR) read by code\n");
+	printf("\trunning from banked RAM ($A000-$BFFF) returns $00 instead of a received $FF.\n");
+	printf("\tSeen on a real X16 with the TexElec serial card; use it to test that\n");
+	printf("\tserial code in banked RAM reads RBR through main RAM. Off by default.\n");
 	printf("-uartaddr [<address>]\n");
 	printf("\tIf not specified, defaults to '$9FE0'\n\tUART2 is alwasy UART1 address + 8.\n");
 	printf("\tThis option is experimental.\n");
@@ -1241,6 +1247,10 @@ main(int argc, char **argv)
 			argv++;
 			has_uart1=true;
 			
+		} else if (!strcmp(argv[0], "-uart-bankread-ff")) {
+			argc--;
+			argv++;
+			uart_bankread_ff = true;
 		} else if (!strcmp(argv[0], "-uartaddr")) {
 			argc--;
 			argv++;

@@ -27,6 +27,27 @@ extern uint16_t uart1_addr;
 extern uint16_t uart2_addr;
 extern serialuartTL16C2550Handle uart1;
 extern serialuartTL16C2550Handle uart2;
+extern bool uart_bankread_ff;
+
+// -uart-bankread-ff: reproduce a quirk seen on a real X16 with the TexElec serial card. A read of
+// RBR ($FF received) by an instruction fetched from banked RAM ($A000-$BFFF) returned $00 there,
+// while the same code in main RAM read $FF. Off by default.
+static uint8_t
+uart_quirk(serialuartTL16C2550Handle uart, uint16_t address, uint8_t value, bool debugOn)
+{
+	if (!uart_bankread_ff || debugOn || value != 0xff || (address & 0x07) != 0) {
+		return value;
+	}
+	if (opcode_addr < 0xa000 || opcode_addr >= 0xc000) {
+		return value;
+	}
+	uint8_t lcr = 0;
+	uart_addrread(uart, &lcr, 3);
+	if (lcr & 0x80) { // DLAB=1: register 0 is the divisor latch, not RBR
+		return value;
+	}
+	return 0x00;
+}
 
 uint8_t ram_bank;
 uint8_t rom_bank;
@@ -255,13 +276,13 @@ real_read6502(uint16_t address, uint8_t bank, bool debugOn, int16_t x16Bank)
 		else if ( has_uart1 && (address >= uart1_addr && address <= (uart1_addr+7) ) ){
 			uint8_t retVal=0;
 			uart_addrread(uart1, &retVal, address & 0x07 );
-			return retVal;
+			return uart_quirk(uart1, address, retVal, debugOn);
 		}// END of Serial UART1*/
 		//Serial UART2 (serial wifi)
 		else if ( has_uart2 && (address >= uart2_addr && address <= (uart2_addr+7))  ){
 			uint8_t retVal=0;
 			uart_addrread(uart2, &retVal, address & 0x07 );
-			return retVal;
+			return uart_quirk(uart2, address, retVal, debugOn);
 		}// END of Serial UART2*/
 		else {
 			// future expansion
